@@ -1,0 +1,9 @@
+* Comint Mode
+** Chrome Dev Tools Protocol
+   [[http://code.google.com/p/chromedevtools/wiki/ChromeDevToolsProtocol][ChromeDevToolsProtocol]].
+
+   HTTP structured.
+
+*** ChromeDevToolsHandshake
+*** Headers
+*** JSON Content
