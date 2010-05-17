@@ -4,6 +4,10 @@
 
    HTTP structured.
 
-*** ChromeDevToolsHandshake
+*** TODO ChromeDevToolsHandshake
+**** TODO Implement optional local repl buffer
+**** TODO Using the same name for buffer and process
+     I'm not sure if this works
+
 *** Headers
 *** JSON Content
