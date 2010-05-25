@@ -45,23 +45,19 @@
   (chrome-debugger-echo* crlf))
 
 
-(defun chrome-debugger-read* (cmd)
+(defun chrome-debugger-read* ()
   "Read a response assuming the environment is set correctly."
   
   )
-
-(defun chrome-debugger-assert* (predicate)
-  "Read a response, and ensure that it passes the predicate."
-  (if (not (predicate (chrome-debugger-read*)))
-      (error "the ChromeDevTools server returned surprising results")
-    t))
 
 (defun chrome-debugger-handshake ()
   (interactive)
   (with-chrome-debugger-repl
    (let ((text "ChromeDevToolsHandshake"))
-    (chrome-debugger-send* text)
-    (chrome-debugger-assert* (lambda (x) (equal text x))))))
+    (chrome-debugger-echo* text)
+    (if (not (equal text (chrome-debugger-read*)))
+        (error "handshake with the ChromeDevTools server failed.")
+      t))))
 
 (defun chrome-debugger-send (cmd)
   "Send a command, setting the environment"
