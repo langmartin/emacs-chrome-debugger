@@ -1,0 +1,3 @@
+[submodule "emacs-oauth"]
+	path = emacs-oauth
+	url = git://github.com/psanford/emacs-oauth.git
