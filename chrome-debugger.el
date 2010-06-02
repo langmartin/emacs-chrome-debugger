@@ -13,37 +13,40 @@
 (defvar chrome-debugger-buffer "*chrome debugger*"
   "Name of the chrome-debugger buffer")
 
+(defvar chrome-debugger-stream "*chrome debugger*"
+  "Name of the chrome-debugger network stream")
+
 (defmacro with-chrome-debugger-repl (body)
   `(save-excursion
      (let ((chrome-debugger-buffer (get-buffer chrome-debugger-buffer)))
        (if (null chrome-debugger-buffer)
            (open-network-stream
-            chrome-debugger-buffer
+            chrome-debugger-stream
             chrome-debugger-buffer
             chrome-debugger-host
             chrome-debugger-port))
        (set-buffer chrome-debugger-buffer)
        ,@body)))
 
-(defun chrome-debugger-echo* (cmd)
-  "Echo a string assuming the environment is set correctly."
-  (process-send-string chrome-debugger-buffer cmd))
+(defun chrome-debugger-send* (str)
+  "Send a literal string to chrome-debugger-process."
+  (process-send-string chrome-debugger-stream str))
 
-(defun chrome-debugger-send* (cmd tool &optional dest)
+(defun chrome-debugger-send (cmd tool &optional dest)
   "Send a command assuming the environment is set correctly."
-  (chrome-debugger-echo* "Content-Length: ")
-  (chrome-debugger-echo* (+ (length cmd) 2))
-  (chrome-debugger-echo* crlf)
-  (chrome-debugger-echo* "Tool: ")
-  (chrome-debugger-echo* tool)
-  (chrome-debugger-echo* crlf)
+  (chrome-debugger-send* "Content-Length: ")
+  (chrome-debugger-send* (+ (length cmd) 2))
+  (chrome-debugger-send* crlf)
+  (chrome-debugger-send* "Tool: ")
+  (chrome-debugger-send* tool)
+  (chrome-debugger-send* crlf)
   (if (dest)
       (progn
-        (chrome-debugger-echo* "Destination: ")
-        (chrome-debugger-echo* dest)
-        (chrome-debugger-echo* crlf)))
-  (chrome-debugger-echo* crlf))
-
+        (chrome-debugger-send* "Destination: ")
+        (chrome-debugger-send* dest)
+        (chrome-debugger-send* crlf)))
+  (chrome-debugger-send* crlf)
+  (chrome-debugger-send* cmd))
 
 (defun chrome-debugger-read* ()
   "Read a response assuming the environment is set correctly."
